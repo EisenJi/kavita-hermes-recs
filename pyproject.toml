@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kavita-hermes-recs"
+version = "0.1.0"
+description = "Local-first Kavita recommender with Hermes integration"
+readme = "README.en.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "EisenJi", email = "eisenjiji@gmail.com" }
+]
+dependencies = []
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["plugin"]
