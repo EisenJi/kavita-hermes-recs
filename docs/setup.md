@@ -92,8 +92,14 @@ Start Hermes and try:
 
 At this stage:
 
-- `/todayread` confirms plugin installation and local config visibility
+- `/todayread` generates a first local recommendation from the synced snapshot
 - `/readingsync` validates Kavita connectivity, boots the local DB, and stores a first-pass snapshot of libraries and series
+
+You can also pass an optional minute budget:
+
+```text
+/todayread 45
+```
 
 ## 7. Next expected workflow
 

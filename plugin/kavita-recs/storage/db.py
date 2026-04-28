@@ -140,6 +140,48 @@ def upsert_series(db_path: Path, series_items: list[dict[str, object]]) -> None:
         )
 
 
+def replace_want_to_read_flags(db_path: Path, series_ids: set[int]) -> None:
+    with connect(db_path) as conn:
+        conn.execute("UPDATE series_cache SET want_to_read = 0")
+        if series_ids:
+            conn.executemany(
+                "UPDATE series_cache SET want_to_read = 1 WHERE series_id = ?",
+                [(series_id,) for series_id in series_ids],
+            )
+
+
+def upsert_progress_entries(db_path: Path, progress_items: list[dict[str, object]]) -> None:
+    with connect(db_path) as conn:
+        now = utc_now_iso()
+        conn.executemany(
+            """
+            INSERT INTO progress_cache (
+              series_id, status, percent, last_read_at, current_chapter_id, updated_at
+            )
+            VALUES (
+              :series_id, :status, :percent, :last_read_at, :current_chapter_id, :updated_at
+            )
+            ON CONFLICT(series_id) DO UPDATE SET
+              status=excluded.status,
+              percent=excluded.percent,
+              last_read_at=excluded.last_read_at,
+              current_chapter_id=excluded.current_chapter_id,
+              updated_at=excluded.updated_at
+            """,
+            [
+                {
+                    "series_id": item["series_id"],
+                    "status": item["status"],
+                    "percent": item["percent"],
+                    "last_read_at": item["last_read_at"],
+                    "current_chapter_id": item["current_chapter_id"],
+                    "updated_at": now,
+                }
+                for item in progress_items
+            ],
+        )
+
+
 def log_sync_run(db_path: Path, sync_type: str, status: str, detail: dict[str, object]) -> None:
     with connect(db_path) as conn:
         conn.execute(
@@ -148,4 +190,56 @@ def log_sync_run(db_path: Path, sync_type: str, status: str, detail: dict[str, o
             VALUES (?, ?, ?, ?)
             """,
             (sync_type, status, json.dumps(detail, ensure_ascii=False), utc_now_iso()),
+        )
+
+
+def fetch_series_rows(db_path: Path) -> list[sqlite3.Row]:
+    with connect(db_path) as conn:
+        return conn.execute(
+            """
+            SELECT
+              s.series_id,
+              s.title,
+              s.library_id,
+              s.library_name,
+              s.format,
+              s.want_to_read,
+              s.user_rating,
+              s.pages,
+              s.pages_read,
+              s.avg_hours_to_read,
+              s.latest_read_date,
+              p.status,
+              p.percent,
+              p.current_chapter_id
+            FROM series_cache s
+            LEFT JOIN progress_cache p ON p.series_id = s.series_id
+            ORDER BY s.title COLLATE NOCASE ASC
+            """
+        ).fetchall()
+
+
+def log_recommendation(
+    db_path: Path,
+    request_text: str | None,
+    constraints: dict[str, object],
+    candidate_ids: list[int],
+    result: dict[str, object],
+) -> None:
+    with connect(db_path) as conn:
+        conn.execute(
+            """
+            INSERT INTO recommendation_log (
+              requested_at, request_text, constraints_json, candidate_ids_json, result_json, accepted
+            )
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (
+                utc_now_iso(),
+                request_text,
+                json.dumps(constraints, ensure_ascii=False),
+                json.dumps(candidate_ids, ensure_ascii=False),
+                json.dumps(result, ensure_ascii=False),
+                None,
+            ),
         )

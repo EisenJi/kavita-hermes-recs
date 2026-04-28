@@ -1,6 +1,7 @@
 """Tool registration for kavita-recs."""
 
 from .config import load_settings
+from .recommender.today import recommend_today
 from .recommender.sync import sync_snapshot
 from .storage.db import bootstrap_database
 
@@ -29,13 +30,11 @@ def register_tools(ctx):
     def handle_recommend_today(params):
         settings = load_settings()
         bootstrap_database(settings.db_path)
-        return {
-            "status": "scaffold",
-            "message": "kavita_recommend_today is not implemented yet.",
-            "configured_user": settings.kavita_user_name,
-            "db_path": str(settings.db_path),
-            "received": params,
-        }
+        return recommend_today(
+            time_budget_minutes=params.get("time_budget_minutes"),
+            mood=params.get("mood"),
+            request_text="tool:kavita_recommend_today",
+        )
 
     ctx.register_tool("kavita_recommend_today", schema, handle_recommend_today)
 

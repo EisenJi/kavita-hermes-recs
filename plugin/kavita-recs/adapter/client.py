@@ -105,3 +105,30 @@ class KavitaClient:
                 break
             page += 1
         return all_items
+
+    def list_filtered_series_page(self, filter_body: dict[str, Any], page_number: int, page_size: int) -> list[dict[str, Any]]:
+        data = self._request_json(
+            "POST",
+            f"/api/Series/v2?PageNumber={page_number}&PageSize={page_size}",
+            body=filter_body,
+        )
+        if not isinstance(data, list):
+            raise KavitaClientError("Unexpected filtered series response shape from Kavita.")
+        return data
+
+    def list_all_filtered_series(self, filter_body: dict[str, Any], page_size: int = 100) -> list[dict[str, Any]]:
+        page = 1
+        all_items: list[dict[str, Any]] = []
+        while True:
+            items = self.list_filtered_series_page(filter_body=filter_body, page_number=page, page_size=page_size)
+            all_items.extend(items)
+            if len(items) < page_size:
+                break
+            page += 1
+        return all_items
+
+    def get_continue_point(self, series_id: int) -> dict[str, Any]:
+        data = self._request_json("GET", f"/api/Reader/continue-point?seriesId={series_id}")
+        if not isinstance(data, dict):
+            raise KavitaClientError(f"Unexpected continue-point response shape for series {series_id}.")
+        return data
