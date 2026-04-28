@@ -1,11 +1,19 @@
 """Slash command registration for kavita-recs."""
 
+from .config import load_settings
+
 
 def register_commands(ctx):
     """Register placeholder slash commands."""
 
     def todayread_command(args):
-        return "kavita-recs scaffold is installed. `/todayread` is not implemented yet."
+        settings = load_settings()
+        return (
+            "kavita-recs scaffold is installed.\n"
+            f"- user: {settings.kavita_user_name or 'unset'}\n"
+            f"- db: {settings.db_path}\n"
+            "- `/todayread` recommendation flow is not implemented yet."
+        )
 
     ctx.register_command(
         "todayread",

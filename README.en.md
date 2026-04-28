@@ -13,12 +13,14 @@ The project is designed for:
 
 ## Current Status
 
-This repository is in scaffold stage and currently includes:
+This repository is in early implementation stage and currently includes:
 
 - bilingual README entrypoints
-- initial project structure
-- first-pass architecture docs
-- a Hermes plugin skeleton
+- first-pass architecture and setup docs
+- a Hermes plugin scaffold
+- local config loading
+- SQLite bootstrap support
+- a plugin install helper script
 
 ## Core Model
 
@@ -53,11 +55,16 @@ scripts/               local bootstrap helpers
 tests/                 test suite
 ```
 
+## Docs
+
+- [Setup](./docs/setup.md)
+- [Architecture](./docs/architecture.md)
+
 ## Next Milestones
 
-1. Implement the `Kavita` adapter.
-2. Add local SQLite schema and sync flow.
-3. Add Hermes tools and slash commands.
+1. Implement the `Kavita` adapter HTTP layer.
+2. Add snapshot sync and local state hydration.
+3. Add real recommendation candidate generation.
 4. Wire daily recommendations through Hermes cron.
 
 ## License

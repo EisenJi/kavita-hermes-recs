@@ -13,12 +13,14 @@
 
 ## 当前状态
 
-当前处于骨架阶段，已经包含：
+当前处于早期实现阶段，已经包含：
 
 - 中英双语 README 入口
-- 项目目录结构
-- 初版架构文档
-- 用于对接 Hermes 的插件骨架
+- 初版架构与安装文档
+- Hermes 插件骨架
+- 本地配置加载
+- SQLite 初始化能力
+- 插件安装辅助脚本
 
 ## 核心思路
 
@@ -53,11 +55,16 @@ scripts/               本地初始化脚本
 tests/                 测试目录
 ```
 
+## 文档
+
+- [安装说明](./docs/setup.md)
+- [架构说明](./docs/architecture.md)
+
 ## 下一阶段计划
 
-1. 实现 `Kavita` adapter。
-2. 加入本地 SQLite schema 和同步逻辑。
-3. 实现 Hermes tools 与 slash commands。
+1. 实现 `Kavita` adapter 的 HTTP 层。
+2. 加入书库快照同步和本地状态回填。
+3. 实现真实的候选生成逻辑。
 4. 通过 Hermes cron 打通每日推荐。
 
 ## 许可证

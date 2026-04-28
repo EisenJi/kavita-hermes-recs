@@ -1,5 +1,8 @@
 """Tool registration for kavita-recs."""
 
+from .config import load_settings
+from .storage.db import bootstrap_database
+
 
 def register_tools(ctx):
     """Register placeholder tools."""
@@ -23,9 +26,13 @@ def register_tools(ctx):
     }
 
     def handle_recommend_today(params):
+        settings = load_settings()
+        bootstrap_database(settings.db_path)
         return {
             "status": "scaffold",
             "message": "kavita_recommend_today is not implemented yet.",
+            "configured_user": settings.kavita_user_name,
+            "db_path": str(settings.db_path),
             "received": params,
         }
 
