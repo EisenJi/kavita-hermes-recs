@@ -83,9 +83,13 @@ hermes plugins
 
 ```text
 /todayread
+/readingsync
 ```
 
-当前阶段该命令会返回一个 scaffold 提示，用于确认插件安装成功。
+当前阶段：
+
+- `/todayread` 用于确认插件安装成功和本地配置可见
+- `/readingsync` 用于验证 Kavita 连通性并初始化本地状态库
 
 ## 7. 后续预期工作流
 

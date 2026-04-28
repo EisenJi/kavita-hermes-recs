@@ -1,6 +1,7 @@
 """Tool registration for kavita-recs."""
 
 from .config import load_settings
+from .recommender.sync import sync_snapshot
 from .storage.db import bootstrap_database
 
 
@@ -37,3 +38,17 @@ def register_tools(ctx):
         }
 
     ctx.register_tool("kavita_recommend_today", schema, handle_recommend_today)
+
+    sync_schema = {
+        "name": "kavita_sync_snapshot",
+        "description": "Validate Kavita connectivity and prepare the local state database.",
+        "parameters": {
+            "type": "object",
+            "properties": {},
+        },
+    }
+
+    def handle_sync_snapshot(params):
+        return sync_snapshot()
+
+    ctx.register_tool("kavita_sync_snapshot", sync_schema, handle_sync_snapshot)

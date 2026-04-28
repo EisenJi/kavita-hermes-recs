@@ -87,9 +87,13 @@ Start Hermes and try:
 
 ```text
 /todayread
+/readingsync
 ```
 
-At this stage, the command is scaffold-only and should confirm that the plugin is installed.
+At this stage:
+
+- `/todayread` confirms plugin installation and local config visibility
+- `/readingsync` validates Kavita connectivity and local DB bootstrap
 
 ## 7. Next expected workflow
 
