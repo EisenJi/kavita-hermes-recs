@@ -1,6 +1,16 @@
+CREATE TABLE IF NOT EXISTS library_cache (
+    library_id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    library_type TEXT,
+    raw_json TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS series_cache (
     series_id INTEGER PRIMARY KEY,
     title TEXT NOT NULL,
+    library_id INTEGER,
+    library_name TEXT,
     summary TEXT,
     format TEXT,
     genres_json TEXT,
@@ -12,6 +22,11 @@ CREATE TABLE IF NOT EXISTS series_cache (
     want_to_read INTEGER DEFAULT 0,
     user_rating REAL,
     external_rating REAL,
+    pages INTEGER,
+    pages_read INTEGER,
+    avg_hours_to_read REAL,
+    latest_read_date TEXT,
+    raw_json TEXT,
     updated_at TEXT NOT NULL
 );
 
@@ -57,4 +72,12 @@ CREATE TABLE IF NOT EXISTS daily_state (
     energy_estimate TEXT,
     available_minutes INTEGER,
     notes TEXT
+);
+
+CREATE TABLE IF NOT EXISTS sync_runs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sync_type TEXT NOT NULL,
+    status TEXT NOT NULL,
+    detail_json TEXT,
+    created_at TEXT NOT NULL
 );

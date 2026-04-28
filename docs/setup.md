@@ -93,7 +93,7 @@ Start Hermes and try:
 At this stage:
 
 - `/todayread` confirms plugin installation and local config visibility
-- `/readingsync` validates Kavita connectivity and local DB bootstrap
+- `/readingsync` validates Kavita connectivity, boots the local DB, and stores a first-pass snapshot of libraries and series
 
 ## 7. Next expected workflow
 

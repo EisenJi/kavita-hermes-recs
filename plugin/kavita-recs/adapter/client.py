@@ -34,15 +34,21 @@ class KavitaClient:
         self._settings = settings
         self._base_url = settings.kavita_base_url.rstrip("/") + "/"
 
-    def _request_json(self, method: str, path: str) -> Any:
+    def _request_json(self, method: str, path: str, body: Any | None = None) -> Any:
         url = urljoin(self._base_url, path.lstrip("/"))
+        data = None
+        headers = {
+            "Accept": "application/json",
+            "x-api-key": self._settings.kavita_api_key or "",
+        }
+        if body is not None:
+            data = json.dumps(body).encode("utf-8")
+            headers["Content-Type"] = "application/json"
         request = Request(
             url,
             method=method,
-            headers={
-                "Accept": "application/json",
-                "x-api-key": self._settings.kavita_api_key or "",
-            },
+            headers=headers,
+            data=data,
         )
         try:
             with urlopen(request, timeout=self._settings.kavita_timeout_seconds) as response:
@@ -72,3 +78,30 @@ class KavitaClient:
     def ping(self) -> bool:
         self.get_current_user()
         return True
+
+    def list_libraries(self) -> list[dict[str, Any]]:
+        data = self._request_json("GET", "/api/Library/libraries")
+        if not isinstance(data, list):
+            raise KavitaClientError("Unexpected libraries response shape from Kavita.")
+        return data
+
+    def list_series_page(self, page_number: int, page_size: int) -> list[dict[str, Any]]:
+        data = self._request_json(
+            "POST",
+            f"/api/Series/all-v2?PageNumber={page_number}&PageSize={page_size}",
+            body={},
+        )
+        if not isinstance(data, list):
+            raise KavitaClientError("Unexpected series response shape from Kavita.")
+        return data
+
+    def list_all_series(self, page_size: int = 100) -> list[dict[str, Any]]:
+        page = 1
+        all_items: list[dict[str, Any]] = []
+        while True:
+            items = self.list_series_page(page_number=page, page_size=page_size)
+            all_items.extend(items)
+            if len(items) < page_size:
+                break
+            page += 1
+        return all_items

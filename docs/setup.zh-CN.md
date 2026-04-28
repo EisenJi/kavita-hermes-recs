@@ -89,7 +89,7 @@ hermes plugins
 当前阶段：
 
 - `/todayread` 用于确认插件安装成功和本地配置可见
-- `/readingsync` 用于验证 Kavita 连通性并初始化本地状态库
+- `/readingsync` 用于验证 Kavita 连通性、初始化本地状态库，并写入第一版 libraries / series 快照
 
 ## 7. 后续预期工作流
 
