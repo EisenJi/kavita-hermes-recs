@@ -95,6 +95,7 @@
 ```bash
 python scripts/setup_daily_cron.py
 python scripts/setup_daily_cron.py --writeback
+python scripts/setup_weekly_summary_cron.py
 ```
 
 ### 再创建 Cron 任务
@@ -104,6 +105,14 @@ python scripts/setup_daily_cron.py --schedule "0 8 * * *" --time-budget 45 --wri
 ```
 
 它直接使用 Hermes 原生的 cron，并把当前仓库设为 cron 的工作目录。
+
+如果你想做每周偏好摘要复查任务：
+
+```bash
+python scripts/setup_weekly_summary_cron.py --schedule "0 9 * * 1" --limit 4 --apply
+```
+
+这个任务刻意比每日推荐更轻。它不会自动改写 Hermes memory，只会产出一份压缩后的周度偏好摘要，供你人工检查或后续手动写入 memory。
 
 ## 实践建议
 

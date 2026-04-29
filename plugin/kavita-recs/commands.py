@@ -2,7 +2,7 @@
 
 from .config import load_settings
 from .recommender.memory import summarize_memory_candidates
-from .recommender.cron_prompt import build_daily_recommendation_prompt
+from .recommender.cron_prompt import build_daily_recommendation_prompt, build_weekly_memory_summary_prompt
 from .recommender.preferences import record_feedback, set_reading_mood
 from .recommender.reading_list import create_reading_list_from_latest
 from .recommender.sync import sync_snapshot
@@ -162,4 +162,19 @@ def register_commands(ctx):
         "readingmemory",
         readingmemory_command,
         "Summarize local preference state into sparse Hermes-memory candidates.",
+    )
+
+    def readingmemorycron_command(args):
+        prompt = build_weekly_memory_summary_prompt(limit=4)
+        return (
+            "Suggested Hermes weekly summary cron setup:\n"
+            "python scripts/setup_weekly_summary_cron.py --schedule '0 9 * * 1' --limit 4 --apply\n"
+            "Cron prompt:\n"
+            f"{prompt}"
+        )
+
+    ctx.register_command(
+        "readingmemorycron",
+        readingmemorycron_command,
+        "Show a suggested Hermes cron setup command for weekly preference summaries.",
     )

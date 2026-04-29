@@ -111,6 +111,7 @@ Useful companion commands:
 /readinglist
 /readingcron
 /readingmemory
+/readingmemorycron
 ```
 
 ## 7. Set up a daily Hermes cron job
@@ -128,6 +129,13 @@ python scripts/setup_daily_cron.py --schedule "0 8 * * *" --time-budget 45 --wri
 ```
 
 This uses Hermes' native cron system and sets the repo as `--workdir`, so the job runs with this repository context.
+
+For a weekly sparse preference-summary review job:
+
+```bash
+python scripts/setup_weekly_summary_cron.py
+python scripts/setup_weekly_summary_cron.py --schedule "0 9 * * 1" --limit 4 --apply
+```
 
 ## 8. Next expected workflow
 

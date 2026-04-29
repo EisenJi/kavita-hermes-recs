@@ -95,6 +95,7 @@ It returns a few compressed preference-summary lines that are suitable candidate
 ```bash
 python scripts/setup_daily_cron.py
 python scripts/setup_daily_cron.py --writeback
+python scripts/setup_weekly_summary_cron.py
 ```
 
 ### Create a Cron Job
@@ -104,6 +105,14 @@ python scripts/setup_daily_cron.py --schedule "0 8 * * *" --time-budget 45 --wri
 ```
 
 This uses Hermes' native cron feature and sets the repository as the cron workdir.
+
+For weekly preference-summary review:
+
+```bash
+python scripts/setup_weekly_summary_cron.py --schedule "0 9 * * 1" --limit 4 --apply
+```
+
+This job is intentionally lighter than the daily recommendation job. It does not update Hermes memory automatically. It only emits a compressed weekly review for human inspection or later manual memory updates.
 
 ## Practical Advice
 

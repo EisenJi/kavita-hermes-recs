@@ -12,3 +12,11 @@ def build_daily_recommendation_prompt(time_budget_minutes: int = 45, writeback: 
     if writeback:
         prompt += " After that, run kavita_create_reading_list to write the latest recommendation back to Kavita."
     return prompt
+
+
+def build_weekly_memory_summary_prompt(limit: int = 4) -> str:
+    return (
+        "Run kavita_summarize_memory_candidates with "
+        f"limit={limit}. Return the candidate lines exactly as a short weekly preference summary. "
+        "Do not expand them into a long essay. Keep the output concise and suitable for manual review before updating Hermes memory."
+    )

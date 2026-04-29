@@ -111,6 +111,7 @@ hermes plugins
 /readinglist
 /readingcron
 /readingmemory
+/readingmemorycron
 ```
 
 ## 7. 设置每日 Hermes cron 任务
@@ -128,6 +129,13 @@ python scripts/setup_daily_cron.py --schedule "0 8 * * *" --time-budget 45 --wri
 ```
 
 这会直接使用 Hermes 原生的 cron 能力，并把当前仓库设为 `--workdir`，保证任务运行时带着本仓库上下文。
+
+如果你还想要一个每周偏好摘要复查任务：
+
+```bash
+python scripts/setup_weekly_summary_cron.py
+python scripts/setup_weekly_summary_cron.py --schedule "0 9 * * 1" --limit 4 --apply
+```
 
 ## 8. 后续预期工作流
 
