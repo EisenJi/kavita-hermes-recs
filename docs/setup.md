@@ -109,6 +109,7 @@ Useful companion commands:
 /readingfeedback 123 disliked too heavy for weekdays
 /readinglist
 /readingcron
+/readingmemory
 ```
 
 ## 7. Set up a daily Hermes cron job

@@ -105,6 +105,7 @@ hermes plugins
 /readingfeedback 123 disliked 工作日太重了
 /readinglist
 /readingcron
+/readingmemory
 ```
 
 ## 7. 设置每日 Hermes cron 任务

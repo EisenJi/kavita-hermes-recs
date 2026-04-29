@@ -1,6 +1,7 @@
 """Slash command registration for kavita-recs."""
 
 from .config import load_settings
+from .recommender.memory import summarize_memory_candidates
 from .recommender.cron_prompt import build_daily_recommendation_prompt
 from .recommender.preferences import record_feedback, set_reading_mood
 from .recommender.reading_list import create_reading_list_from_latest
@@ -145,4 +146,20 @@ def register_commands(ctx):
         "readingcron",
         readingcron_command,
         "Show a suggested Hermes cron setup command for daily recommendations.",
+    )
+
+    def readingmemory_command(args):
+        result = summarize_memory_candidates(limit=4)
+        if result["status"] != "ok":
+            return str(result["message"])
+        lines = ["Memory-safe preference summary candidates:"]
+        for line in result["candidate_lines"]:
+            lines.append(f"- {line}")
+        lines.append(f"Sources: feedback={result['source_feedback_count']}, features={result['source_feature_count']}")
+        return "\n".join(lines)
+
+    ctx.register_command(
+        "readingmemory",
+        readingmemory_command,
+        "Summarize local preference state into sparse Hermes-memory candidates.",
     )

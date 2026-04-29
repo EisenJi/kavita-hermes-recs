@@ -317,3 +317,17 @@ def fetch_active_preference_features(db_path: Path) -> list[sqlite3.Row]:
             """,
             (utc_now_iso(),),
         ).fetchall()
+
+
+def fetch_feedback_rows(db_path: Path, limit: int = 100) -> list[sqlite3.Row]:
+    with connect(db_path) as conn:
+        return conn.execute(
+            """
+            SELECT f.series_id, s.title, f.feedback_type, f.feedback_reason, f.created_at
+            FROM feedback_log f
+            LEFT JOIN series_cache s ON s.series_id = f.series_id
+            ORDER BY f.id DESC
+            LIMIT ?
+            """,
+            (limit,),
+        ).fetchall()

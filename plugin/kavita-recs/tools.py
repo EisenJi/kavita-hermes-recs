@@ -1,6 +1,7 @@
 """Tool registration for kavita-recs."""
 
 from .config import load_settings
+from .recommender.memory import summarize_memory_candidates
 from .recommender.preferences import record_feedback, set_reading_mood
 from .recommender.reading_list import create_reading_list_from_latest
 from .recommender.today import recommend_today
@@ -119,3 +120,19 @@ def register_tools(ctx):
         return create_reading_list_from_latest(title=params.get("title"))
 
     ctx.register_tool("kavita_create_reading_list", reading_list_schema, handle_reading_list)
+
+    memory_schema = {
+        "name": "kavita_summarize_memory_candidates",
+        "description": "Summarize local preference state into a few memory-safe candidate lines.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "limit": {"type": "integer"},
+            },
+        },
+    }
+
+    def handle_memory_summary(params):
+        return summarize_memory_candidates(limit=int(params.get("limit", 4)))
+
+    ctx.register_tool("kavita_summarize_memory_candidates", memory_schema, handle_memory_summary)
