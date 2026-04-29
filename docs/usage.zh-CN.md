@@ -67,14 +67,14 @@
 - `continue`
 - `explore`
 
-### 5. 把最近一次推荐写回 Kavita
+### 5. 把当前保存在本地日志中的推荐结果写回 Kavita
 
 ```text
 /readinglist
 /readinglist Weekend Picks
 ```
 
-它会把最近一次本地推荐写成一个 `Kavita Reading List`。
+它会把当前保存在本地日志中的推荐结果写成一个 `Kavita Reading List`。
 
 如果你想让推荐结果直接出现在 `Kavita UI` 里，就用这个命令。
 

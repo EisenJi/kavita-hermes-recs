@@ -67,14 +67,14 @@ Supported moods:
 - `continue`
 - `explore`
 
-### 5. Write the Latest Recommendation Back to Kavita
+### 5. Write the Current Stored Recommendation Back to Kavita
 
 ```text
 /readinglist
 /readinglist Weekend Picks
 ```
 
-This creates a `Kavita Reading List` from the most recent local recommendation.
+This creates a `Kavita Reading List` from the recommendation result currently stored in the local log.
 
 Use this when you want the picks to appear directly in the `Kavita` UI.
 

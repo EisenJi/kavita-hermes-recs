@@ -82,7 +82,7 @@ hermes plugins
 
 and toggle `kavita-recs` in the interactive UI.
 
-## 6. Verify the scaffold
+## 6. Verify the installation
 
 Start Hermes and try:
 
@@ -91,7 +91,7 @@ Start Hermes and try:
 /readingsync
 ```
 
-At this stage:
+Expected behavior:
 
 - `/todayread` generates a first local recommendation from the synced snapshot
 - `/readingsync` validates Kavita connectivity, boots the local DB, and stores a first-pass snapshot of libraries and series
@@ -137,9 +137,9 @@ python scripts/setup_weekly_summary_cron.py
 python scripts/setup_weekly_summary_cron.py --schedule "0 9 * * 1" --limit 4 --apply
 ```
 
-## 8. Next expected workflow
+## 8. Recommended workflow
 
-After the adapter and sync layer are implemented, the normal flow will become:
+The normal flow is:
 
 1. sync Kavita snapshot
 2. store local user state

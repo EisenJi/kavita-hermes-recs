@@ -10,7 +10,7 @@ def build_daily_recommendation_prompt(time_budget_minutes: int = 45, writeback: 
         "If the recommendation succeeds, summarize the primary pick and backups in under 8 lines."
     )
     if writeback:
-        prompt += " After that, run kavita_create_reading_list to write the latest recommendation back to Kavita."
+        prompt += " After that, run kavita_create_reading_list to write the current locally stored recommendation back to Kavita."
     return prompt
 
 

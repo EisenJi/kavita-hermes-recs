@@ -26,8 +26,8 @@ Current repository capabilities:
 - generate rule-based daily recommendations locally
 - record feedback and short-term reading mood
 - summarize sparse preference candidates suitable for `Hermes` memory
-- write the latest recommendation back to `Kavita` as a `Reading List`
-- generate a native `Hermes cron` setup command for daily automation
+- write the current locally stored recommendation back to `Kavita` as a `Reading List`
+- generate native `Hermes cron` setup commands for daily recommendation and weekly preference-summary review
 
 ## Why This Architecture
 
@@ -50,9 +50,10 @@ Why this matters:
 1. Run `/readingsync` to pull a local snapshot from `Kavita`.
 2. Run `/todayread` to generate a local recommendation.
 3. Run `/readingfeedback` and `/readingmood` to refine future recommendations.
-4. Run `/readinglist` if you want to save the latest recommendation back into `Kavita`.
+4. Run `/readinglist` if you want to save the current locally stored recommendation back into `Kavita`.
 5. Run `/readingcron` or `python scripts/setup_daily_cron.py` if you want daily automation.
 6. Run `/readingmemory` to get a sparse summary of preference lines that are safe candidates for future `Hermes` memory updates.
+7. Run `/readingmemorycron` or `python scripts/setup_weekly_summary_cron.py` if you want weekly review automation for memory-safe summaries.
 
 ## Commands
 
@@ -65,6 +66,7 @@ Current Hermes plugin commands:
 - `/readinglist [title]`
 - `/readingcron`
 - `/readingmemory`
+- `/readingmemorycron`
 
 ## Quick Start
 

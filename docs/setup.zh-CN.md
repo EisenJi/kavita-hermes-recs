@@ -82,7 +82,7 @@ hermes plugins
 
 然后在列表中启用 `kavita-recs`。
 
-## 6. 验证骨架安装
+## 6. 验证安装
 
 启动 Hermes 后执行：
 
@@ -91,7 +91,7 @@ hermes plugins
 /readingsync
 ```
 
-当前阶段：
+预期行为：
 
 - `/todayread` 会基于本地快照生成第一版本地推荐
 - `/readingsync` 用于验证 Kavita 连通性、初始化本地状态库，并写入第一版 libraries / series 快照
@@ -137,9 +137,9 @@ python scripts/setup_weekly_summary_cron.py
 python scripts/setup_weekly_summary_cron.py --schedule "0 9 * * 1" --limit 4 --apply
 ```
 
-## 8. 后续预期工作流
+## 8. 推荐工作流
 
-当 adapter 和同步层完成后，正常流程会是：
+正常流程是：
 
 1. 同步 Kavita 书库快照
 2. 写入本地用户状态

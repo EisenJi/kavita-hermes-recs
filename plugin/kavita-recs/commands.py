@@ -130,7 +130,7 @@ def register_commands(ctx):
     ctx.register_command(
         "readinglist",
         readinglist_command,
-        "Create a Kavita reading list from the latest recommendation.",
+        "Create a Kavita reading list from the current locally stored recommendation.",
     )
 
     def readingcron_command(args):

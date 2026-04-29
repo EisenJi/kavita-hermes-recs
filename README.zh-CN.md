@@ -26,8 +26,8 @@
 - 在本地生成规则驱动的“今日阅读推荐”
 - 记录反馈和短期阅读心情
 - 生成适合进入 `Hermes memory` 的稀疏偏好摘要候选
-- 把最近一次推荐写回 `Kavita Reading List`
-- 生成原生 `Hermes cron` 的每日自动化配置
+- 把当前保存在本地日志中的推荐结果写回 `Kavita Reading List`
+- 生成原生 `Hermes cron` 的每日推荐与每周偏好摘要自动化配置
 
 ## 为什么这样设计
 
@@ -53,6 +53,7 @@
 4. 如果你想把推荐结果带回 `Kavita UI`，运行 `/readinglist`。
 5. 如果你想每天自动跑，运行 `/readingcron` 或 `python scripts/setup_daily_cron.py`。
 6. 如果你想把零散反馈压缩成少量可进入 `Hermes memory` 的摘要候选，运行 `/readingmemory`。
+7. 如果你想每周自动生成一份可复查的偏好摘要，运行 `/readingmemorycron` 或 `python scripts/setup_weekly_summary_cron.py`。
 
 ## 命令一览
 
@@ -65,6 +66,7 @@
 - `/readinglist [标题]`
 - `/readingcron`
 - `/readingmemory`
+- `/readingmemorycron`
 
 ## 快速开始
 
@@ -90,7 +92,7 @@ hermes plugins enable kavita-recs
 
 ## 文档
 
-- [安装说明](./docs/setup.md)
+- [安装说明](./docs/setup.zh-CN.md)
 - [使用说明](./docs/usage.zh-CN.md)
 - [架构说明](./docs/architecture.md)
 

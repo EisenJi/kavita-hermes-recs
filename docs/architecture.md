@@ -89,7 +89,7 @@ Example of good memory candidate:
 
 Example of bad memory content:
 
-- raw lists of every recently disliked title
+- raw lists of every disliked title
 - every recommendation event
 - numerical ranking features
 
@@ -107,7 +107,7 @@ Current pipeline:
 
 ## Why Write Back to Kavita
 
-“Write back to Kavita” means saving the latest recommendation as a `Kavita Reading List`.
+“Write back to Kavita” means saving the recommendation currently stored in the local log as a `Kavita Reading List`.
 
 It does **not** modify ebook files.
 

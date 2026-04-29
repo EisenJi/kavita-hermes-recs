@@ -14,11 +14,11 @@ Core deployment model:
 
 Work in this order unless the user explicitly redirects:
 
-1. stable install and bootstrap flow
-2. Kavita adapter and snapshot sync
-3. candidate generation and recommendation logic
-4. Hermes cron and memory integration
-5. advanced ranking and preference learning
+1. keep the project usable for real-world daily use
+2. preserve clean docs and reproducible setup
+3. gather real user feedback before expanding complexity
+4. improve ranking logic only after usage feedback justifies it
+5. keep Hermes memory sparse and summary-oriented
 
 ## Commit Convention
 

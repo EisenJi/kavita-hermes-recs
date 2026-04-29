@@ -51,9 +51,9 @@ def summarize_memory_candidates(limit: int = 4) -> dict[str, object]:
 
     feedback_counter = Counter(str(row["feedback_type"]) for row in feedback_rows)
     if feedback_counter.get("disliked", 0) >= 2:
-        lines.append("User is actively rejecting some recent recommendations, so avoid repeating near-miss picks.")
+        lines.append("User is actively rejecting some recommendation attempts, so avoid repeating near-miss picks.")
     if feedback_counter.get("liked", 0) >= 2:
-        lines.append("User is responding well to recent recommendation refinement, so keep exploiting confirmed preferences.")
+        lines.append("User is responding well to recommendation refinement, so keep exploiting confirmed preferences.")
 
     reason_texts = [
         str(row["feedback_reason"]).strip()

@@ -33,7 +33,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--time-budget", type=int, default=45, help="Reading time budget in minutes.")
     parser.add_argument("--name", default="Kavita Daily Recommendation", help="Cron job name.")
     parser.add_argument("--deliver", default="local", help="Hermes delivery target. Defaults to local.")
-    parser.add_argument("--writeback", action="store_true", help="Also write the latest recommendation back to Kavita as a reading list.")
+    parser.add_argument("--writeback", action="store_true", help="Also write the current locally stored recommendation back to Kavita as a reading list.")
     parser.add_argument("--apply", action="store_true", help="Actually create the Hermes cron job.")
     return parser.parse_args()
 
