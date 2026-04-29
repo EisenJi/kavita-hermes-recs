@@ -101,6 +101,14 @@ You can also pass an optional minute budget:
 /todayread 45
 ```
 
+Useful companion commands:
+
+```text
+/readingmood light 7
+/readingfeedback 123 liked
+/readingfeedback 123 disliked too heavy for weekdays
+```
+
 ## 7. Next expected workflow
 
 After the adapter and sync layer are implemented, the normal flow will become:

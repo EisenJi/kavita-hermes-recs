@@ -97,6 +97,14 @@ hermes plugins
 /todayread 45
 ```
 
+配套命令：
+
+```text
+/readingmood light 7
+/readingfeedback 123 liked
+/readingfeedback 123 disliked 工作日太重了
+```
+
 ## 7. 后续预期工作流
 
 当 adapter 和同步层完成后，正常流程会是：

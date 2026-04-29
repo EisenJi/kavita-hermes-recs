@@ -7,7 +7,12 @@ from math import ceil
 from typing import Any
 
 from ..config import load_settings
-from ..storage.db import bootstrap_database, fetch_series_rows, log_recommendation
+from ..storage.db import (
+    bootstrap_database,
+    fetch_active_preference_features,
+    fetch_series_rows,
+    log_recommendation,
+)
 
 
 DEFAULT_PAGE_MINUTES = 1.0
@@ -119,6 +124,54 @@ def _score_row(row: dict[str, Any], time_budget_minutes: int) -> Candidate:
     )
 
 
+def _active_preferences_map(db_path) -> dict[tuple[str, str], dict[str, object]]:
+    rows = fetch_active_preference_features(db_path)
+    return {
+        (str(row["feature_scope"]), str(row["feature_key"])): {
+            "value": row["feature_value"],
+            "weight": float(row["weight"]),
+        }
+        for row in rows
+    }
+
+
+def _apply_preference_adjustments(candidate: Candidate, preferences: dict[tuple[str, str], dict[str, object]], budget: int) -> Candidate:
+    score = candidate.score
+    reason = candidate.reason
+
+    series_key = ("series_affinity", f"series:{candidate.series_id}")
+    if series_key in preferences:
+        affinity = float(preferences[series_key]["weight"])
+        score += affinity * 10
+        if affinity > 0:
+            reason = "你之前对这本书给过正向反馈，且当前条件仍然适合继续推它。"
+        elif affinity < 0:
+            reason = "这本书曾收到负向反馈，系统已显著降权。"
+
+    mood_key = ("short_term", "reading_mood")
+    if mood_key in preferences:
+        mood = str(preferences[mood_key]["value"])
+        weight = float(preferences[mood_key]["weight"])
+        if mood == "light":
+            if candidate.est_remaining_minutes <= budget:
+                score += weight * 6
+            if candidate.status == "in_progress":
+                score += weight * 2
+        elif mood == "serious":
+            if candidate.est_remaining_minutes > max(30, budget // 2):
+                score += weight * 4
+        elif mood == "continue":
+            if candidate.status == "in_progress":
+                score += weight * 8
+        elif mood == "explore":
+            if candidate.status == "unread":
+                score += weight * 6
+
+    candidate.score = round(score, 2)
+    candidate.reason = reason
+    return candidate
+
+
 def recommend_today(
     time_budget_minutes: int | None = None,
     mood: str | None = None,
@@ -129,7 +182,11 @@ def recommend_today(
     budget = time_budget_minutes or settings.default_time_budget
 
     rows = fetch_series_rows(settings.db_path)
-    candidates = [_score_row(dict(row), budget) for row in rows]
+    preferences = _active_preferences_map(settings.db_path)
+    candidates = [
+        _apply_preference_adjustments(_score_row(dict(row), budget), preferences, budget)
+        for row in rows
+    ]
     candidates = [c for c in candidates if c.status != "completed"]
     candidates.sort(key=lambda item: (-item.score, item.est_remaining_minutes, item.title.lower()))
 

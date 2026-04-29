@@ -243,3 +243,62 @@ def log_recommendation(
                 None,
             ),
         )
+
+
+def get_series_title(db_path: Path, series_id: int) -> str | None:
+    with connect(db_path) as conn:
+        row = conn.execute(
+            "SELECT title FROM series_cache WHERE series_id = ?",
+            (series_id,),
+        ).fetchone()
+        if row is None:
+            return None
+        return str(row["title"])
+
+
+def log_feedback(db_path: Path, series_id: int, feedback_type: str, feedback_reason: str | None) -> None:
+    with connect(db_path) as conn:
+        conn.execute(
+            """
+            INSERT INTO feedback_log (series_id, feedback_type, feedback_reason, created_at)
+            VALUES (?, ?, ?, ?)
+            """,
+            (series_id, feedback_type, feedback_reason, utc_now_iso()),
+        )
+
+
+def upsert_preference_feature(
+    db_path: Path,
+    feature_key: str,
+    feature_scope: str,
+    feature_value: str,
+    weight: float,
+    expires_at: str | None = None,
+) -> None:
+    with connect(db_path) as conn:
+        conn.execute(
+            """
+            INSERT INTO preference_features (
+              feature_key, feature_scope, feature_value, weight, updated_at, expires_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(feature_key, feature_scope) DO UPDATE SET
+              feature_value=excluded.feature_value,
+              weight=excluded.weight,
+              updated_at=excluded.updated_at,
+              expires_at=excluded.expires_at
+            """,
+            (feature_key, feature_scope, feature_value, weight, utc_now_iso(), expires_at),
+        )
+
+
+def fetch_active_preference_features(db_path: Path) -> list[sqlite3.Row]:
+    with connect(db_path) as conn:
+        return conn.execute(
+            """
+            SELECT feature_key, feature_scope, feature_value, weight, expires_at, updated_at
+            FROM preference_features
+            WHERE expires_at IS NULL OR expires_at > ?
+            """,
+            (utc_now_iso(),),
+        ).fetchall()

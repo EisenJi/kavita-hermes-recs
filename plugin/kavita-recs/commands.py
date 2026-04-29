@@ -1,6 +1,7 @@
 """Slash command registration for kavita-recs."""
 
 from .config import load_settings
+from .recommender.preferences import record_feedback, set_reading_mood
 from .recommender.sync import sync_snapshot
 from .recommender.today import recommend_today
 
@@ -68,4 +69,47 @@ def register_commands(ctx):
         "readingsync",
         readingsync_command,
         "Validate Kavita connectivity and prepare local state.",
+    )
+
+    def readingfeedback_command(args):
+        parts = [part for part in str(args or "").split() if part]
+        if len(parts) < 2:
+            return "Usage: /readingfeedback <series_id> <liked|disliked|skipped> [reason]"
+        try:
+            series_id = int(parts[0])
+        except ValueError:
+            return "series_id must be an integer."
+        feedback_type = parts[1]
+        reason = " ".join(parts[2:]) if len(parts) > 2 else None
+        result = record_feedback(series_id=series_id, feedback_type=feedback_type, reason=reason)
+        if result["status"] != "ok":
+            return str(result["message"])
+        return f"Recorded {result['feedback_type']} for {result['title']} (series_id={result['series_id']})."
+
+    ctx.register_command(
+        "readingfeedback",
+        readingfeedback_command,
+        "Record liked/disliked/skipped feedback for a series.",
+    )
+
+    def readingmood_command(args):
+        parts = [part for part in str(args or "").split() if part]
+        if not parts:
+            return "Usage: /readingmood <light|serious|continue|explore> [days]"
+        mood = parts[0]
+        days = 7
+        if len(parts) > 1:
+            try:
+                days = int(parts[1])
+            except ValueError:
+                return "days must be an integer."
+        result = set_reading_mood(mood=mood, days=days)
+        if result["status"] != "ok":
+            return str(result["message"])
+        return f"Set reading mood to {result['mood']} for {result['days']} days."
+
+    ctx.register_command(
+        "readingmood",
+        readingmood_command,
+        "Set a short-term reading mood preference.",
     )
