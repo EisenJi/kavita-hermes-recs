@@ -2,60 +2,110 @@
 
 [中文](./README.zh-CN.md) | [English](./README.en.md)
 
-Local-first reading recommendation system for `Kavita` powered by `Hermes`.
+`kavita-hermes-recs` is a local-first reading recommendation system for `Kavita`, with `Hermes` as the interaction and automation layer.
 
-This repository aims to provide:
+It is designed for this deployment model:
 
-- shared `Kavita` library access
-- per-user local recommendation state
-- per-user `Hermes` integration
-- reproducible local setup for family or small-group use
+- one shared `Kavita` server
+- one local `Hermes` instance per user
+- one local SQLite recommendation state per user
 
-## Status
+This makes it suitable for family or small-group use:
 
-Early implementation stage. The repository now contains:
+- the library is shared
+- recommendations remain personal
+- feedback does not pollute other users' preferences
 
-- bilingual README entrypoints
-- initial architecture and setup docs
-- Hermes plugin scaffold
-- local config loader
-- SQLite bootstrap support
-- plugin install helper script
+## What It Does
 
-## Core Idea
+Current repository capabilities:
 
-Use one shared `Kavita` server as the content plane, and run one local `Hermes`-powered recommender per user machine as the decision plane.
+- sync libraries and series snapshots from `Kavita`
+- infer local progress state from synced metadata
+- track `want-to-read` and continue points
+- generate rule-based daily recommendations locally
+- record feedback and short-term reading mood
+- summarize sparse preference candidates suitable for `Hermes` memory
+- write the latest recommendation back to `Kavita` as a `Reading List`
+- generate a native `Hermes cron` setup command for daily automation
 
-```text
-Shared Kavita
-  -> books, metadata, progress, reading lists
+## Why This Architecture
 
-Per-user local Hermes + SQLite
-  -> preferences, recommendation history, feedback, daily picks
+The system is intentionally split into two planes:
+
+- shared content plane: `Kavita`
+  - books, metadata, reading progress, reading lists
+- personal decision plane: local `Hermes + SQLite`
+  - recommendation history, feedback, temporary preference state, daily picks
+
+Why this matters:
+
+- `Kavita` already solves shared library management well
+- recommendation state should remain personal and local
+- `Hermes memory` is a scarce resource and should only store compressed, long-lived summaries
+- raw recommendation logs and weights belong in SQLite, not in `USER.md`
+
+## Current User Flow
+
+1. Run `/readingsync` to pull a local snapshot from `Kavita`.
+2. Run `/todayread` to generate a local recommendation.
+3. Run `/readingfeedback` and `/readingmood` to refine future recommendations.
+4. Run `/readinglist` if you want to save the latest recommendation back into `Kavita`.
+5. Run `/readingcron` or `python scripts/setup_daily_cron.py` if you want daily automation.
+6. Run `/readingmemory` to get a sparse summary of preference lines that are safe candidates for future `Hermes` memory updates.
+
+## Commands
+
+Current Hermes plugin commands:
+
+- `/readingsync`
+- `/todayread [minutes]`
+- `/readingfeedback <series_id> <liked|disliked|skipped> [reason]`
+- `/readingmood <light|serious|continue|explore> [days]`
+- `/readinglist [title]`
+- `/readingcron`
+- `/readingmemory`
+
+## Quick Start
+
+```bash
+git clone git@github.com:EisenJi/kavita-hermes-recs.git
+cd kavita-hermes-recs
+
+mkdir -p ~/.config/kavita-hermes-recs
+cp .env.example ~/.config/kavita-hermes-recs/config.env
+
+python scripts/install_plugin.py --link
+python scripts/bootstrap_db.py
+
+hermes plugins enable kavita-recs
 ```
 
-This keeps recommendations personal while keeping the book library shared.
+Then in Hermes:
+
+```text
+/readingsync
+/todayread 45
+```
+
+## Documentation
+
+- [Setup](./docs/setup.md)
+- [Usage](./docs/usage.md)
+- [Architecture](./docs/architecture.md)
 
 ## Repository Layout
 
 ```text
 plugin/kavita-recs/    Hermes plugin package
-docs/                  architecture and setup docs
-scripts/               local bootstrap helpers
+docs/                  setup, usage, architecture
+scripts/               bootstrap and cron helpers
 tests/                 test suite
 ```
 
-## Docs
+## Status
 
-- [Setup](./docs/setup.md)
-- [Architecture](./docs/architecture.md)
-
-## Next Milestones
-
-1. Implement the `Kavita` adapter HTTP layer.
-2. Add snapshot sync and local state hydration.
-3. Add real recommendation candidate generation.
-4. Add daily recommendation flow through Hermes cron.
+This project is still in active build-out. The current implementation is already usable as a local prototype, but the ranking logic and metadata enrichment are still evolving.
 
 ## License
 

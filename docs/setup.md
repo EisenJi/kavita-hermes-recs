@@ -2,9 +2,10 @@
 
 This document is intentionally practical. It describes the first reproducible local setup path for one user machine.
 
-For Chinese instructions, see:
+Related docs:
 
-- `../README.zh-CN.md`
+- `./usage.md`
+- `./architecture.md`
 
 ## Prerequisites
 
