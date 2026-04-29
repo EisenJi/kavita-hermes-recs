@@ -108,9 +108,26 @@ Useful companion commands:
 /readingfeedback 123 liked
 /readingfeedback 123 disliked too heavy for weekdays
 /readinglist
+/readingcron
 ```
 
-## 7. Next expected workflow
+## 7. Set up a daily Hermes cron job
+
+Preview the cron setup:
+
+```bash
+python scripts/setup_daily_cron.py
+```
+
+Create a daily job at 08:00 that also writes recommendations back to Kavita:
+
+```bash
+python scripts/setup_daily_cron.py --schedule "0 8 * * *" --time-budget 45 --writeback --apply
+```
+
+This uses Hermes' native cron system and sets the repo as `--workdir`, so the job runs with this repository context.
+
+## 8. Next expected workflow
 
 After the adapter and sync layer are implemented, the normal flow will become:
 

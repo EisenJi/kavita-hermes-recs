@@ -1,6 +1,7 @@
 """Slash command registration for kavita-recs."""
 
 from .config import load_settings
+from .recommender.cron_prompt import build_daily_recommendation_prompt
 from .recommender.preferences import record_feedback, set_reading_mood
 from .recommender.reading_list import create_reading_list_from_latest
 from .recommender.sync import sync_snapshot
@@ -129,4 +130,19 @@ def register_commands(ctx):
         "readinglist",
         readinglist_command,
         "Create a Kavita reading list from the latest recommendation.",
+    )
+
+    def readingcron_command(args):
+        prompt = build_daily_recommendation_prompt(time_budget_minutes=45, writeback=True)
+        return (
+            "Suggested Hermes cron setup:\n"
+            "python scripts/setup_daily_cron.py --schedule '0 8 * * *' --time-budget 45 --writeback --apply\n"
+            "Cron prompt:\n"
+            f"{prompt}"
+        )
+
+    ctx.register_command(
+        "readingcron",
+        readingcron_command,
+        "Show a suggested Hermes cron setup command for daily recommendations.",
     )

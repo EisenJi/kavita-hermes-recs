@@ -104,9 +104,26 @@ hermes plugins
 /readingfeedback 123 liked
 /readingfeedback 123 disliked 工作日太重了
 /readinglist
+/readingcron
 ```
 
-## 7. 后续预期工作流
+## 7. 设置每日 Hermes cron 任务
+
+先预览 cron 配置：
+
+```bash
+python scripts/setup_daily_cron.py
+```
+
+创建一个每天早上 08:00 运行、并自动把推荐写回 Kavita 的任务：
+
+```bash
+python scripts/setup_daily_cron.py --schedule "0 8 * * *" --time-budget 45 --writeback --apply
+```
+
+这会直接使用 Hermes 原生的 cron 能力，并把当前仓库设为 `--workdir`，保证任务运行时带着本仓库上下文。
+
+## 8. 后续预期工作流
 
 当 adapter 和同步层完成后，正常流程会是：
 
