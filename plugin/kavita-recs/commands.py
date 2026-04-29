@@ -2,6 +2,7 @@
 
 from .config import load_settings
 from .recommender.preferences import record_feedback, set_reading_mood
+from .recommender.reading_list import create_reading_list_from_latest
 from .recommender.sync import sync_snapshot
 from .recommender.today import recommend_today
 
@@ -112,4 +113,20 @@ def register_commands(ctx):
         "readingmood",
         readingmood_command,
         "Set a short-term reading mood preference.",
+    )
+
+    def readinglist_command(args):
+        title = str(args).strip() or None
+        result = create_reading_list_from_latest(title=title)
+        if result["status"] != "ok":
+            return str(result["message"])
+        return (
+            f"Created Kavita reading list '{result['title']}' "
+            f"(id={result['reading_list_id']}) with {result['item_count']} recommended series."
+        )
+
+    ctx.register_command(
+        "readinglist",
+        readinglist_command,
+        "Create a Kavita reading list from the latest recommendation.",
     )

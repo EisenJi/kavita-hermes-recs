@@ -107,6 +107,7 @@ Useful companion commands:
 /readingmood light 7
 /readingfeedback 123 liked
 /readingfeedback 123 disliked too heavy for weekdays
+/readinglist
 ```
 
 ## 7. Next expected workflow

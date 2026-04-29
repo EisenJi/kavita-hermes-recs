@@ -2,6 +2,7 @@
 
 from .config import load_settings
 from .recommender.preferences import record_feedback, set_reading_mood
+from .recommender.reading_list import create_reading_list_from_latest
 from .recommender.today import recommend_today
 from .recommender.sync import sync_snapshot
 from .storage.db import bootstrap_database
@@ -102,3 +103,19 @@ def register_tools(ctx):
         )
 
     ctx.register_tool("kavita_set_reading_mood", mood_schema, handle_mood)
+
+    reading_list_schema = {
+        "name": "kavita_create_reading_list",
+        "description": "Create a Kavita reading list from the latest local recommendation.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "title": {"type": "string"},
+            },
+        },
+    }
+
+    def handle_reading_list(params):
+        return create_reading_list_from_latest(title=params.get("title"))
+
+    ctx.register_tool("kavita_create_reading_list", reading_list_schema, handle_reading_list)

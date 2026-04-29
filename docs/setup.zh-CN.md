@@ -103,6 +103,7 @@ hermes plugins
 /readingmood light 7
 /readingfeedback 123 liked
 /readingfeedback 123 disliked 工作日太重了
+/readinglist
 ```
 
 ## 7. 后续预期工作流

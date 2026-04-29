@@ -132,3 +132,30 @@ class KavitaClient:
         if not isinstance(data, dict):
             raise KavitaClientError(f"Unexpected continue-point response shape for series {series_id}.")
         return data
+
+    def list_reading_lists(self, page_size: int = 100) -> list[dict[str, Any]]:
+        data = self._request_json(
+            "POST",
+            f"/api/ReadingList/lists?PageNumber=1&PageSize={page_size}&includePromoted=false&sortByLastModified=true",
+            body={},
+        )
+        if not isinstance(data, list):
+            raise KavitaClientError("Unexpected reading list response shape from Kavita.")
+        return data
+
+    def create_reading_list(self, title: str) -> dict[str, Any]:
+        data = self._request_json(
+            "POST",
+            "/api/ReadingList/create",
+            body={"title": title},
+        )
+        if not isinstance(data, dict):
+            raise KavitaClientError("Unexpected reading list create response shape from Kavita.")
+        return data
+
+    def add_series_to_reading_list(self, reading_list_id: int, series_id: int) -> None:
+        self._request_json(
+            "POST",
+            "/api/ReadingList/update-by-series",
+            body={"readingListId": reading_list_id, "seriesId": series_id},
+        )

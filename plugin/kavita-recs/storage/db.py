@@ -245,6 +245,21 @@ def log_recommendation(
         )
 
 
+def fetch_latest_recommendation_result(db_path: Path) -> dict[str, object] | None:
+    with connect(db_path) as conn:
+        row = conn.execute(
+            """
+            SELECT result_json
+            FROM recommendation_log
+            ORDER BY id DESC
+            LIMIT 1
+            """
+        ).fetchone()
+        if row is None or not row["result_json"]:
+            return None
+        return json.loads(str(row["result_json"]))
+
+
 def get_series_title(db_path: Path, series_id: int) -> str | None:
     with connect(db_path) as conn:
         row = conn.execute(
